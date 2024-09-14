@@ -3,12 +3,14 @@ using AutoMapper.QueryableExtensions;
 using BookStoreApp.API.Data;
 using BookStoreApp.API.DTOs.Book;
 using BookStoreApp.API.Static;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApp.API.Controllers {
    [Route("API/[controller]")]
    [ApiController]
+   [Authorize]
    public class BooksController : ControllerBase {
       private readonly BookStoreDbContext _context;
       private readonly IMapper _mapper;
@@ -73,6 +75,7 @@ namespace BookStoreApp.API.Controllers {
       /// <param name="bookDTO"></param>
       /// <returns></returns>
       [HttpPut("{id}")]
+      [Authorize(Roles = "Admin")]
       public async Task<IActionResult> PutBook(int id, BookUpdateDTO bookDTO) {
          if (id != bookDTO.Id) {
             _logger.LogWarning($"Update ID invalid in {nameof(PutBook)} - ID: {id}");
@@ -109,6 +112,7 @@ namespace BookStoreApp.API.Controllers {
       /// <param name="book"></param>
       /// <returns></returns>
       [HttpPost]
+      [Authorize(Roles = "Administrator")]
       public async Task<ActionResult<BookCreateDTO>> PostBook(BookCreateDTO bookDTO) {
          try {
             var book = _mapper.Map<Book>(bookDTO);
@@ -129,6 +133,7 @@ namespace BookStoreApp.API.Controllers {
       /// <param name="id"></param>
       /// <returns></returns>
       [HttpDelete("{id}")]
+      [Authorize(Roles = "Admin")]
       public async Task<IActionResult> DeleteBook(int id) {
          try {
             var book = await _context.Books.FindAsync(id);

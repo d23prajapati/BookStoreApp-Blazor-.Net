@@ -2,6 +2,7 @@
 using BookStoreApp.API.Data;
 using BookStoreApp.API.DTOs.Author;
 using BookStoreApp.API.DTOs.Book;
+using BookStoreApp.API.DTOs.User;
 
 namespace BookStoreApp.API.Configurations
 {
@@ -20,6 +21,8 @@ namespace BookStoreApp.API.Configurations
          CreateMap<Book, BookDetailsDTO>()
             .ForMember(q => q.AuthorName, d => d.MapFrom(map => $"{map.Author.FirstName} {map.Author.LastName}"))
             .ReverseMap();
+
+         CreateMap<UserDTO, ApiUser>().ReverseMap();
       }
    }
 }

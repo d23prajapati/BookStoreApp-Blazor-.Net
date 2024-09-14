@@ -2,12 +2,14 @@
 using BookStoreApp.API.Data;
 using BookStoreApp.API.DTOs.Author;
 using BookStoreApp.API.Static;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApp.API.Controllers {
    [Route("API/[controller]")]
    [ApiController]
+   [Authorize]
    public class AuthorsController : ControllerBase {
       private readonly BookStoreDbContext _context;
       private readonly IMapper _mapper;
@@ -67,6 +69,7 @@ namespace BookStoreApp.API.Controllers {
       /// <param name="author"></param>
       /// <returns></returns>
       [HttpPut("{id}")]
+      [Authorize(Roles = "Admin")]
       public async Task<IActionResult> PutAuthor(int id, AuthorUpdateDTO authorDTO) {
 
          if (id != authorDTO.Id) {
@@ -100,6 +103,7 @@ namespace BookStoreApp.API.Controllers {
       /// <param name="author"></param>
       /// <returns></returns>
       [HttpPost]
+      [Authorize(Roles = "Admin")]
       public async Task<ActionResult<AuthorCreateDTO>> PostAuthor(AuthorCreateDTO authorDTO) {
          try {
             var author = _mapper.Map<Author>(authorDTO);
@@ -122,6 +126,7 @@ namespace BookStoreApp.API.Controllers {
       /// <param name="id"></param>
       /// <returns></returns>
       [HttpDelete("{id}")]
+      [Authorize(Roles = "Admin")]
       public async Task<IActionResult> DeleteAuthor(int id) {
          try {
             var author = await _context.Authors.FindAsync(id);
